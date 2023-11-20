@@ -9,6 +9,17 @@ import { gql, useQuery } from '@apollo/client';
 import { Tag } from '@ensdomains/thorin'
 import moment from 'moment';
 import { RadioButton,CheckboxRow,Card,FieldSet } from '@ensdomains/thorin'
+import { WagmiConfig, createConfig, mainnet } from 'wagmi'
+import { createPublicClient, http } from 'viem'
+import { Profile } from './Profile'
+ 
+const config = createConfig({
+  autoConnect: true,
+  publicClient: createPublicClient({
+    chain: mainnet,
+    transport: http()
+  }),
+})
 
 const baseuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-baseg/version/latest'
 const opuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-opg/version/latest'
@@ -50,9 +61,9 @@ const App = () => {
     <ThemeProvider theme={lightTheme}>
       <ThorinGlobalStyles />
       <div style={{ width: '180px' }}>
-        <Button prefix={<LockSVG />} variant="primary">
-          Connect Wallet
-        </Button>
+      <WagmiConfig config={config}>
+        <Profile />
+      </WagmiConfig>
       </div>
       <div>
         <h1>Register L2 subnames</h1>
