@@ -10,10 +10,12 @@ import { Tag } from '@ensdomains/thorin'
 import moment from 'moment';
 import { RadioButton,CheckboxRow,Card,FieldSet } from '@ensdomains/thorin'
 import { WagmiConfig, createConfig,configureChains, mainnet } from 'wagmi'
+
 import { createPublicClient, http } from 'viem'
 import { publicProvider} from 'wagmi/providers/public'
 import { goerli, optimismGoerli, baseGoerli } from 'wagmi/chains'
 import { Profile } from './Profile'
+import { SwitchNetwork } from './SwitchNetwork'
 import { getNetwork } from '@wagmi/core'
 import { CHAIN_INFO,isL2 } from './utils'
 
@@ -65,13 +67,12 @@ const App = () => {
   const isInL2 = isL2(chain?.id)
   console.log({label, chainParam, isInL2})
   return (
+    <WagmiConfig config={config}>
     <ApolloProvider client={client}>
     <ThemeProvider theme={lightTheme}>
       <ThorinGlobalStyles />
       <div style={{ width: '180px' }}>
-      <WagmiConfig config={config}>
         <Profile />
-      </WagmiConfig>
       </div>
       <div>
         <h1>Register L2 subnames</h1>
@@ -86,17 +87,7 @@ const App = () => {
               onClick={(evt) =>  setChainName('base')}
             />
             {chainName && (
-              <Button
-              style={{width:'16em', marginTop:"-10px"}}
-              onClick={()=>{
-                window.ethereum.request({
-                  method: "wallet_addEthereumChain",
-                  params: [chainParam]
-                }).catch((error)=>{
-                  console.log('*** Add network error', {error})
-                });  
-              }}
-              >Switch Network </Button>
+              <SwitchNetwork chainParam={chainParam} />
             )}
             </div>
             {chainName && (
@@ -138,6 +129,7 @@ const App = () => {
       </ul>
     </ThemeProvider>
     </ApolloProvider>
+    </WagmiConfig>
   )
 }
 export default App;

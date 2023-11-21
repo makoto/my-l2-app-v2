@@ -3,6 +3,7 @@ export const OP_CHAIN_ID = 420
 export const BASE_CHAIN_ID = 84531
 export const CHAIN_INFO={
     'op':{
+      id:OP_CHAIN_ID,
       chainId: "0x1a4",
       rpcUrls: ["https://endpoints.omniatech.io/v1/op/goerli/public"],
       chainName: "Optimism Goerli Testnet",
@@ -14,6 +15,7 @@ export const CHAIN_INFO={
       blockExplorerUrls: ["https://goerli-optimism.etherscan.io"]
     },
     'base':{
+      id:BASE_CHAIN_ID,
       chainId: "0x14a33",
       rpcUrls: ["https://goerli.base.org"],
       chainName: "Base Goerli Testnet",
