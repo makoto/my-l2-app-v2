@@ -4,25 +4,21 @@ import { Button, LockSVG } from '@ensdomains/thorin'
 import { getNetwork } from '@wagmi/core'
 import { WagmiConfig, createConfig,configureChains, mainnet, useNetwork, useSwitchNetwork } from 'wagmi'
 
-export function SwitchNetwork(chainParam) {
+export function SwitchNetwork({chainId}) {
   const { chain } = useNetwork()
-  const a = useSwitchNetwork()
-  console.log({a, chain})
-  // console.log({chain, chains, error, isLoading, pendingChainId, switchNetwork, switchNetworkAsync})
-  // const { address, isConnected } = useAccount()
-  // const { connect } = useConnect({
-  //   connector: new InjectedConnector(),
-  // })
-  // const { chain } = getNetwork()
-  // console.log({chain, chainParam})
-  // const { disconnect } = useDisconnect()
+  const {chains, error, isLoading, pendingChainId, switchNetwork, switchNetworkAsync} = useSwitchNetwork()
+  console.log('*', {chainId, realId:chain.id, error, isLoading, pendingChainId})
+  const { address, isConnected } = useAccount()
  
   return(
     <Button
     style={{width:'16em', marginTop:"-10px"}}
     onClick={()=>{
-      console.log('**clicked', {chainParam})
+      console.log('***clicked1', {chainId, address, isConnected})
+      console.log({chains, error, isLoading, pendingChainId, switchNetwork, switchNetworkAsync})
+      
       // useSwitchNetwork(chainParam.id)
+      switchNetwork?.(chainId)
       // window.ethereum.request({
       //   method: "wallet_addEthereumChain",
       //   params: [chainParam]

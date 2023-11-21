@@ -18,8 +18,23 @@ import { Profile } from './Profile'
 import { SwitchNetwork } from './SwitchNetwork'
 import { getNetwork } from '@wagmi/core'
 import { CHAIN_INFO,isL2 } from './utils'
+import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
 
-const { chains, publicClient, webSocketPublicClient} = configureChains([mainnet, goerli, optimismGoerli, baseGoerli], [publicProvider()])
+// 1. Get projectId
+const projectId = process.env.REACT_APP_WC_ID
+// 2. Create wagmiConfig
+const metadata = {
+  name: 'Web3Modal',
+  description: 'Web3Modal Example',
+  url: 'https://web3modal.com',
+  icons: ['https://avatars.githubusercontent.com/u/37784886']
+}
+
+
+const { chains, publicClient, webSocketPublicClient} = configureChains([goerli, optimismGoerli, baseGoerli], [publicProvider()])
+const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
+createWeb3Modal({ wagmiConfig, projectId, chains })
+
 const config = createConfig({
   autoConnect: true,
   publicClient: createPublicClient({
@@ -65,13 +80,14 @@ const App = () => {
   const parent = `.${chainName || ''}.evmgateway.eth`
   const chainParam = CHAIN_INFO[chainName]
   const isInL2 = isL2(chain?.id)
-  console.log({label, chainParam, isInL2})
+  const canRegister = isInL2 && chainParam?.id === chain?.id
+  console.log({label, canRegister,preferred:chainParam?.id, connected:chain?.id, isInL2})
   return (
-    <WagmiConfig config={config}>
+    <WagmiConfig config={wagmiConfig}>
     <ApolloProvider client={client}>
     <ThemeProvider theme={lightTheme}>
       <ThorinGlobalStyles />
-      <div style={{ width: '180px' }}>
+      <div>
         <Profile />
       </div>
       <div>
@@ -87,10 +103,10 @@ const App = () => {
               onClick={(evt) =>  setChainName('base')}
             />
             {chainName && (
-              <SwitchNetwork chainParam={chainParam} />
+              <SwitchNetwork chainId={chainParam.id} />
             )}
             </div>
-            {chainName && (
+            {canRegister && (
               <div style={{display:"flex"}} >
                 <Input
                   label="Pick a subname"
@@ -101,7 +117,7 @@ const App = () => {
                 />
                 <Button
                   shape="rounded" width="45" style={{marginTop:"28px",marginLeft:"15px"}}
-                  disabled={!label}
+                  disabled={!label && canRegister}
                   onClick={(evt) => {console.log("****")}}
                 >Register</Button>
               </div>
