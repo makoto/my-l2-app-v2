@@ -1,3 +1,4 @@
+import packet from 'dns-packet';
 export const L1_CHAIN_ID = 5
 export const OP_CHAIN_ID = 420
 export const BASE_CHAIN_ID = 84531
@@ -31,3 +32,5 @@ export const CHAIN_INFO={
 export function isL2(chainId){
     return chainId === OP_CHAIN_ID || chainId === BASE_CHAIN_ID
 }
+
+export const encodeName = (name) => '0x' + packet.name.encode(name).toString('hex')

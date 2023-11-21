@@ -10,15 +10,16 @@ import { Tag } from '@ensdomains/thorin'
 import moment from 'moment';
 import { RadioButton,CheckboxRow,Card,FieldSet } from '@ensdomains/thorin'
 import { WagmiConfig, createConfig,configureChains, mainnet } from 'wagmi'
-
 import { createPublicClient, http } from 'viem'
 import { publicProvider} from 'wagmi/providers/public'
 import { goerli, optimismGoerli, baseGoerli } from 'wagmi/chains'
 import { Profile } from './Profile'
+import { Register } from './Register'
 import { SwitchNetwork } from './SwitchNetwork'
 import { getNetwork } from '@wagmi/core'
 import { CHAIN_INFO,isL2 } from './utils'
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
+
 
 // 1. Get projectId
 const projectId = process.env.REACT_APP_WC_ID
@@ -107,20 +108,7 @@ const App = () => {
             )}
             </div>
             {canRegister && (
-              <div style={{display:"flex"}} >
-                <Input
-                  label="Pick a subname"
-                  placeholder="nick"
-                  suffix={parent}
-                  width='128'
-                  onChange={(evt) => {setLabel(evt.target.value)}}
-                />
-                <Button
-                  shape="rounded" width="45" style={{marginTop:"28px",marginLeft:"15px"}}
-                  disabled={!label && canRegister}
-                  onClick={(evt) => {console.log("****")}}
-                >Register</Button>
-              </div>
+              <Register canRegister={canRegister} parent={parent} label={label} setLabel={setLabel} />
             )}
 
           </FieldSet>
