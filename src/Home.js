@@ -12,6 +12,8 @@ import { InjectedConnector } from 'wagmi/connectors/injected'
 import { gql, useQuery } from '@apollo/client';
 import { CHAIN_INFO,isL2, OP_CHAIN_ID, BASE_CHAIN_ID } from './utils'
 import { useBlockNumber } from 'wagmi'
+import {ethers} from 'ethers'
+
 const GET_APPROVALS = gql`
   query getApprovals {
     approvals(first:20) {
@@ -39,8 +41,12 @@ export function Home({client, opclient}) {
   const { data:opQueryData = []} = useQuery(GET_APPROVALS, {
     client: opclient
   });
-  const opapprovals = (opQueryData?.approvals || []).map(a => { return {...a, ...{chain:'op', chainId:OP_CHAIN_ID}} })
-  const baseapprovals = (baseQueryData?.approvals || []).map(a => { return {...a, ...{chain:'base', chainId:BASE_CHAIN_ID}} })
+  const opapprovals = (opQueryData?.approvals || []).map(a => {
+    return {...a, ...{chain:'op', chainId:OP_CHAIN_ID, operator:ethers.getAddress(a.operator)}}
+  })
+  const baseapprovals = (baseQueryData?.approvals || []).map(a => {
+    return {...a, ...{chain:'base', chainId:BASE_CHAIN_ID, operator:ethers.getAddress(a.operator)}}
+  })
   const approvals = [...baseapprovals,...opapprovals]
   const parent = `.${chainName || ''}.evmgateway.eth`
   const chainParam = CHAIN_INFO[chainName]
