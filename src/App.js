@@ -9,10 +9,15 @@ import { gql, useQuery } from '@apollo/client';
 import { Tag } from '@ensdomains/thorin'
 import moment from 'moment';
 import { RadioButton,CheckboxRow,Card,FieldSet } from '@ensdomains/thorin'
-import { WagmiConfig, createConfig, mainnet } from 'wagmi'
+import { WagmiConfig, createConfig,configureChains, mainnet } from 'wagmi'
 import { createPublicClient, http } from 'viem'
+import { publicProvider} from 'wagmi/providers/public'
+import { goerli, optimismGoerli, baseGoerli } from 'wagmi/chains'
 import { Profile } from './Profile'
- 
+import { getNetwork } from '@wagmi/core'
+import { CHAIN_INFO,isL2 } from './utils'
+
+const { chains, publicClient, webSocketPublicClient} = configureChains([mainnet, goerli, optimismGoerli, baseGoerli], [publicProvider()])
 const config = createConfig({
   autoConnect: true,
   publicClient: createPublicClient({
@@ -43,6 +48,7 @@ const opclient = new ApolloClient({
   uri: opuri
 });
 const App = () => {
+  const { chain } = getNetwork()
   const [chainName, setChainName] = useState();
   const [label, setLabel] = useState("");
   const { data:baseQueryData = [] } = useQuery(GET_APPROVALS, {
@@ -55,7 +61,9 @@ const App = () => {
   const baseapprovals = (baseQueryData?.approvals || []).map(a => { return {...a, ...{chain:'base'}} })
   const approvals = [...baseapprovals,...opapprovals]
   const parent = `.${chainName || ''}.evmgateway.eth`
-  console.log(label)
+  const chainParam = CHAIN_INFO[chainName]
+  const isInL2 = isL2(chain?.id)
+  console.log({label, chainParam, isInL2})
   return (
     <ApolloProvider client={client}>
     <ThemeProvider theme={lightTheme}>
@@ -77,6 +85,19 @@ const App = () => {
             <RadioButton label="Base" name="RadioButtonGroup" value="base"   width="26"
               onClick={(evt) =>  setChainName('base')}
             />
+            {chainName && (
+              <Button
+              style={{width:'16em', marginTop:"-10px"}}
+              onClick={()=>{
+                window.ethereum.request({
+                  method: "wallet_addEthereumChain",
+                  params: [chainParam]
+                }).catch((error)=>{
+                  console.log('*** Add network error', {error})
+                });  
+              }}
+              >Switch Network </Button>
+            )}
             </div>
             {chainName && (
               <div style={{display:"flex"}} >
