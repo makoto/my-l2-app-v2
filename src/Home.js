@@ -6,12 +6,12 @@ import { RadioButton,Card,FieldSet } from '@ensdomains/thorin'
 import { Register } from './Register'
 import { SwitchNetwork } from './SwitchNetwork'
 import { HashRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { useAccount, useNetwork, useConnect, useDisconnect } from 'wagmi'
+import { useAccount, useNetwork, useConnect, useDisconnect, useContractRead } from 'wagmi'
 import { getNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { gql, useQuery } from '@apollo/client';
-import { CHAIN_INFO,isL2 } from './utils'
-
+import { CHAIN_INFO,isL2, OP_CHAIN_ID, BASE_CHAIN_ID } from './utils'
+import { useBlockNumber } from 'wagmi'
 const GET_APPROVALS = gql`
   query getApprovals {
     approvals(first:20) {
@@ -25,7 +25,10 @@ const GET_APPROVALS = gql`
 
 // export function Home({chainName, setChainName, chainParam, canRegister, label, setLabel, approvals}) {
 export function Home({client, opclient}) {
+  const a = useBlockNumber({chainId:84531})
+  
   const { chain } = useNetwork()
+  console.log('****useBlock', a, chain)
   const { chain:chain2 } = getNetwork()
   console.log({chain, chain2})
   const [chainName, setChainName] = useState();
@@ -36,8 +39,8 @@ export function Home({client, opclient}) {
   const { data:opQueryData = []} = useQuery(GET_APPROVALS, {
     client: opclient
   });
-  const opapprovals = (opQueryData?.approvals || []).map(a => { return {...a, ...{chain:'op'}} })
-  const baseapprovals = (baseQueryData?.approvals || []).map(a => { return {...a, ...{chain:'base'}} })
+  const opapprovals = (opQueryData?.approvals || []).map(a => { return {...a, ...{chain:'op', chainId:OP_CHAIN_ID}} })
+  const baseapprovals = (baseQueryData?.approvals || []).map(a => { return {...a, ...{chain:'base', chainId:BASE_CHAIN_ID}} })
   const approvals = [...baseapprovals,...opapprovals]
   const parent = `.${chainName || ''}.evmgateway.eth`
   const chainParam = CHAIN_INFO[chainName]
@@ -83,6 +86,7 @@ export function Home({client, opclient}) {
       {
         approvals.sort((a,b) => {return b.blockTimestamp - a.blockTimestamp} ).map((approval)=> {
           const blockTimestamp = approval.blockTimestamp
+          console.log('****' ,{approval})
           const approvedAt = new Date(blockTimestamp * 1000)
           return (<li style={{margin:"5px"}}>
             {approval.chain === 'op' ? (
@@ -90,7 +94,7 @@ export function Home({client, opclient}) {
             ):(
               <Tag  style={{ display: 'inline', marginRight:"1em"   }} colorStyle="bluePrimary">Blue</Tag>
             )}
-            <Link to={`/name/${approval.name}/${approval.operator}`}>{approval.name} is granted to {approval.operator.slice(0,5)}... at {moment(approvedAt).format("YYYY-MM-DD hh:mm")}</Link>
+            <Link to={`/name/${approval.name}/${approval.operator}/${approval.chainId}`}>{approval.name} is granted to {approval.operator.slice(0,5)}... at {moment(approvedAt).format("YYYY-MM-DD hh:mm")}</Link>
           </li>)
         })
       }

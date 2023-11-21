@@ -22,6 +22,7 @@ export function Profile() {
         <Button  style={{ width: '180px' }} onClick={() => disconnect()}>Disconnect</Button>
       </div>)
   }else{
-    return (<Button  style={{ width: '180px' }} onClick={() => open({ view: 'Networks' })}>Connect Wallet</Button>)
+    // return <w3m-button />
+    return (<Button  style={{ width: '180px' }} onClick={() => open({ view: 'Connect' })}>Connect Wallet</Button>)
   }
 }

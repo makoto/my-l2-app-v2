@@ -29,16 +29,14 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 }
 
-const { chains, publicClient, webSocketPublicClient} = configureChains([goerli, optimismGoerli, baseGoerli], [publicProvider()])
+const { chains, publicClient, webSocketPublicClient} = configureChains([goerli,baseGoerli], [publicProvider()])
+// const { chains, publicClient, webSocketPublicClient} = configureChains([mainnet, goerli, optimismGoerli, baseGoerli], [publicProvider()])
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
 createWeb3Modal({ wagmiConfig, projectId, chains })
 
 const config = createConfig({
   autoConnect: true,
-  publicClient: createPublicClient({
-    chain: mainnet,
-    transport: http()
-  }),
+  publicClient
 })
 
 const baseuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-baseg/version/latest'
@@ -55,7 +53,7 @@ const opclient = new ApolloClient({
 const App = () => {
   return (
     <Router>
-    <WagmiConfig config={wagmiConfig}>
+    <WagmiConfig config={config}>
     <ApolloProvider client={client}>
     <ThemeProvider theme={lightTheme}>
       <ThorinGlobalStyles />
@@ -65,7 +63,7 @@ const App = () => {
       </div>
       <Routes>
         <Route path="/" element={<Home client={client} opclient={opclient} />} />
-        <Route path="/name/:name/:operator" element={<Name />} />
+        <Route path="/name/:name/:operator/:chainId" element={<Name />} />
       </Routes>
     </ThemeProvider>
     </ApolloProvider>
