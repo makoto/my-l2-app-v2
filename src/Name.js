@@ -106,12 +106,12 @@ export function Name(provider) {
   const l1blockNumber = useBlockNumber({
     chainId: 5,
   })
-  const canEdit = operator === address && parseInt(chainId) === chain.id
+  const canEdit = operator === address && parseInt(chainId) === chain?.id
   const cansetName = canEdit && address === addrData
-  console.log('*Name5', {operator, address, chainId, chainId2:chain.id, canEdit})
+  console.log('*Name5', {operator, address, chainId, chainId2:chain?.id, canEdit})
   console.log(`*Name BlockNumber l1:${l1blockNumber.data}  l2:${blockNumber.data} ${canEdit}`)
 
-  const l1address = (useEthers(provider, encodedName, node, chain.id))[0]
+  const l1address = (useEthers(provider, encodedName, node, chain?.id))[0]
   const { data:ensAddressData, isError:ensAddressIsError} = useEnsAddress({
     name,
     chainId:5

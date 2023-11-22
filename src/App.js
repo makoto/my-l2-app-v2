@@ -62,7 +62,7 @@ const App = () => {
       <ThorinGlobalStyles />
       <div>
         <Link to="/">Home</Link>
-        <Profile />
+        <Profile provider={provider} />
       </div>
       <Routes>
         <Route path="/" element={<Home client={client} opclient={opclient} />} />
