@@ -10,7 +10,7 @@ export function Profile(provider) {
   const { chain } = useNetwork()
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
-  const l2name = (useL2PrimaryName(provider, address))
+  const l2name = (useL2PrimaryName(provider, address, chain))
   let displayName
   if(l2name){
     displayName = `${l2name}(${address?.slice(0,5)}...)`
