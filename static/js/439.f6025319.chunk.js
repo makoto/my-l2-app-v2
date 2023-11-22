@@ -1,0 +1,1 @@
+(self.webpackChunkmy_l2_app_v2=self.webpackChunkmy_l2_app_v2||[]).push([[439],{6601:()=>{},4654:()=>{},2361:()=>{},4616:()=>{}}]);
