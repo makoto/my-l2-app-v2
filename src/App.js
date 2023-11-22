@@ -20,10 +20,9 @@ import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
 import { HashRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { ethers } from 'ethers';
 const L1_PROVIDER_URL = process.env.REACT_APP_L1_PROVIDER_URL
-const provider  = new ethers.JsonRpcProvider(L1_PROVIDER_URL);
-window.provider = provider
-// 1. Get projectId
 const projectId = process.env.REACT_APP_WC_ID
+const provider  = new ethers.JsonRpcProvider(L1_PROVIDER_URL);
+// 1. Get projectId
 // 2. Create wagmiConfig
 const metadata = {
   name: 'Web3Modal',
@@ -31,6 +30,7 @@ const metadata = {
   url: 'https://web3modal.com',
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 }
+console.log({L1_PROVIDER_URL,projectId})
 
 const { chains, publicClient, webSocketPublicClient} = configureChains([goerli,baseGoerli, optimismGoerli], [publicProvider()])
 // const { chains, publicClient, webSocketPublicClient} = configureChains([mainnet, goerli, optimismGoerli, baseGoerli], [publicProvider()])
