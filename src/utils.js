@@ -15,6 +15,7 @@ export const CHAIN_INFO={
         decimals: 18
       },
       blockExplorerUrls: ["https://goerli-optimism.etherscan.io"],
+      L2_REGISTRAR_ADDRESS: '0x2b07cf3ef421a5ff1cb6f437036bdef132eea37b',
       L1_RESOLVER_ADDRESS:'0x65a0963A2941A13a96FcDCfE36c94c6a341f26E5',
       L1_REVERSE_RESOLVER_ADDRESS:'0xeEB5832Ea8732f7EF06d468E40F562c9D7347795',
       L2_RESOLVER_ADDRESS:'0x96753bd0D9bdd98d3a84837B5933078AF49aF12d',
@@ -32,6 +33,7 @@ export const CHAIN_INFO={
         decimals: 18
       },
       blockExplorerUrls: ["https://goerli.basescan.org"],
+      L2_REGISTRAR_ADDRESS: '0xe0356133c3c43cbb623543488e607e4e349eaa10',
       L1_RESOLVER_ADDRESS:'0x052D7E10D55Ae12b4F62cdE18dBb7E938efa230D',
       L1_REVERSE_RESOLVER_ADDRESS:'0x3c332a23a6052afE947F47656d1fD0f450F4C237',
       L2_RESOLVER_ADDRESS:'0xE4B18eFbF71d516046514598FD7FcFbad4beC742',

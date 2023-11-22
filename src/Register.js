@@ -7,7 +7,6 @@ import { useContractWrite, useContractRead } from 'wagmi'
 import { CHAIN_INFO, encodeName } from './utils'
 
 const abi = [
-  // "function approve(bytes,address,bool)"
   {
     "inputs": [
       {
@@ -19,14 +18,9 @@ const abi = [
         "internalType": "address",
         "name": "operator",
         "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "approved",
-        "type": "bool"
       }
     ],
-    "name": "approve",
+    "name": "register",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -59,7 +53,7 @@ export function Register({canRegister, parent, label, setLabel}) {
   const { open } = useWeb3Modal()
   const { chain } = useNetwork()
   const { address, isConnected } = useAccount()
-  const { L2_RESOLVER_ADDRESS, blockExplorerUrls } = CHAIN_INFO[chain?.id]
+  const { L2_REGISTRAR_ADDRESS, blockExplorerUrls } = CHAIN_INFO[chain?.id]
   const l2ExplorerUrl = blockExplorerUrls[0]
   const { connect } = useConnect({
     connector: new InjectedConnector(),
@@ -78,9 +72,9 @@ export function Register({canRegister, parent, label, setLabel}) {
   // console.log('***REGISTER1', {chainId:chain.id, OWNER_ADDRESS})
   // console.log('***REGISTER2', {data, error, isError, isLoading, DELEGATABLE_RESOLVER_FACTORY_ADDRESS})
   const { data:approveData, isLoading:approveIsLoading, isSuccess:approveIsSuccess, write:writeApprove } = useContractWrite({
-    address: L2_RESOLVER_ADDRESS,
+    address: L2_REGISTRAR_ADDRESS,
     abi: abi,
-    functionName:'approve',
+    functionName:'register',
     chainId: chain.id
   })
 
@@ -109,7 +103,7 @@ export function Register({canRegister, parent, label, setLabel}) {
             const name = `${label}${parent}`
             const encodedName = encodeName(name)
             console.log('***clicked', {name, encodedName, address})
-            writeApprove({args:[encodedName, address, true], from:address})
+            writeApprove({args:[encodedName, address], from:address})
         }}
     >{approveIsLoading ? (<Spinner></Spinner>): (<div>Register</div>)}</Button>
       {approveData? (<div>
