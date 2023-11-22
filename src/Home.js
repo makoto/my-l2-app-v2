@@ -11,7 +11,6 @@ import { getNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { gql, useQuery } from '@apollo/client';
 import { CHAIN_INFO,isL2, OP_CHAIN_ID, BASE_CHAIN_ID } from './utils'
-import { useBlockNumber } from 'wagmi'
 import {ethers} from 'ethers'
 
 const GET_APPROVALS = gql`
@@ -27,10 +26,8 @@ const GET_APPROVALS = gql`
 
 // export function Home({chainName, setChainName, chainParam, canRegister, label, setLabel, approvals}) {
 export function Home({client, opclient}) {
-  const a = useBlockNumber({chainId:84531})
   
   const { chain } = useNetwork()
-  console.log('****useBlock', a, chain)
   const { chain:chain2 } = getNetwork()
   console.log({chain, chain2})
   const [chainName, setChainName] = useState();

@@ -14,7 +14,6 @@ export default function useEthers(provider, encodedname, node, chainId) {
   const i = new ethers.Interface(abi)
   const calldata = i.encodeFunctionData("addr", [node])
   const [data, setData] = useState('');
-  console.log('UseEthers1')
   useEffect(() => {
     if (encodedname) {
         const resolver = new ethers.Contract(L1_RESOLVER_ADDRESS, abi, provider);

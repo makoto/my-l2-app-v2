@@ -9,10 +9,8 @@ export function Profile(provider) {
   const { open } = useWeb3Modal()
   const { chain } = useNetwork()
   const { address, isConnected } = useAccount()
-  console.log({chain, address, isConnected})
   const { disconnect } = useDisconnect()
   const l2name = (useL2PrimaryName(provider, address))
-  console.log({provider, address, l2name})
   let displayName
   if(l2name){
     displayName = `${l2name}(${address?.slice(0,5)}...)`

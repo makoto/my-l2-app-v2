@@ -55,22 +55,19 @@ const l2ReverseAbi = [
 ]
 
 export function Name(provider) {
-  const { name, operator, chainId } = useParams()
-  
+  const { name, operator, chainId:chainIdString } = useParams()
+  const chainId = parseInt(chainIdString)
   // const { open } = useWeb3Modal()
-  const { chain } = useNetwork({chainId:84531})
+  const { chain } = useNetwork({chainId})
   const { address, isConnected } = useAccount();
   const [newAddress, setNewAddress] = useState("");
   const encodedName = encodeName(name)
   const node = ethers.namehash(name)
   const {chains} = useSwitchNetwork()
-  console.log('*Name0', chains)
-  console.log('*Name', {name, node, operator, chainId})
   // Hardcoded base addresses
   const L1_RESOLVER_ADDRESS = '0x052D7E10D55Ae12b4F62cdE18dBb7E938efa230D'
   const L2_RESOLVER_ADDRESS = '0xE4B18eFbF71d516046514598FD7FcFbad4beC742'
   const L2_REVERSE_REGISTRAR_ADDRESS = '0xDC317ef697b3A9903a24abcC325d9C1C80B19D87'
-  console.log('*Name2', {chain, address, isConnected})
   // const args = [ encodedName, 0, operator ]
   const args = [
     "0x066d616b6f746f04626173650a65766d676174657761790365746800",
@@ -78,61 +75,47 @@ export function Name(provider) {
     "0xffd1ac3e8818adcbe5c597ea076e8d3210b45df5"
   ]
   const blockNumber = useBlockNumber({
-    chainId: 84531,
+    chainId,
   })
-  console.log('*Name3', {args, blockNumber})
   const { data, error, isError, isLoading } = useContractRead({
     address: L2_RESOLVER_ADDRESS,
     abi,
     args,
     functionName: 'getAuthorisedNode',
-    chainId:84531
+    chainId
   })
-  console.log('*Name4', {data, error, isError, isLoading})
   const { data:addrData, error:addrError } = useContractRead({
     address: L2_RESOLVER_ADDRESS,
     abi:l1abi,
     args:[node],
     functionName: 'addr',
-    chainId:84531
-  })
-  const { data:addrData2, error:addrError2 } = useContractRead({
-    address: L1_RESOLVER_ADDRESS,
-    abi:l1abi,
-    args:[node],
-    functionName: 'addr',
-    chainId:5
+    chainId: chainId
   })
   const l1blockNumber = useBlockNumber({
     chainId: 5,
   })
-  const canEdit = operator === address && parseInt(chainId) === chain?.id
+  const canEdit = operator === address && chainId === chain?.id
   const cansetName = canEdit && address === addrData
-  console.log('*Name5', {operator, address, chainId, chainId2:chain?.id, canEdit})
   console.log(`*Name BlockNumber l1:${l1blockNumber.data}  l2:${blockNumber.data} ${canEdit}`)
 
   const l1address = (useEthers(provider, encodedName, node, chain?.id))[0]
-  const { data:ensAddressData, isError:ensAddressIsError} = useEnsAddress({
-    name,
-    chainId:5
-  })
-
   const { data:setAddrData, isLoading:setAddrIsLoading, isSuccess:setAddrIsSuccess, write:writeSetAddr } = useContractWrite({
     address: L2_RESOLVER_ADDRESS,
     abi: l2WriteAbi,
     functionName:'setAddr',
-    chainId: 84531
+    chainId
   })
 
   const { data:setNameData, isLoading:setNameIsLoading, isSuccess:setNameIsSuccess, write:writeSetName } = useContractWrite({
     address: L2_REVERSE_REGISTRAR_ADDRESS,
     abi: l2ReverseAbi,
     functionName:'setName',
-    chainId: 84531
+    chainId
   })
 
-  return(<div>
-    Hello {name}
+  return(
+    <div style={{margin:"1em"}}>
+    <h1 style={{marginBottom:"1em"}}>{name}</h1>
     <ul>
       <li>operator: {operator}</li>
       <li>address: {address}</li>

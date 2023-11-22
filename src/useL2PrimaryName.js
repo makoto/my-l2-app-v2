@@ -12,15 +12,12 @@ const abi = [
 export default function useL2PrimaryName(provider, address) {
   const namespace       = "base.reverse.evmgateway.eth";
   const [data, setData] = useState('');
-  console.log('UsePrimaryName1', {address})
   useEffect(() => {
     if (address) {
         const name            = address.substring(2).toLowerCase() + "." + namespace
         const reversenode     = ethers.namehash(name)    
         const resolver = new ethers.Contract(L1_RESOLVER_ADDRESS, abi, provider);
-        console.log('UsePrimaryName2')
         resolver.name(reversenode, { enableCcipRead: true }).then(r => {
-          console.log('UsePrimaryName3', r)
           setData(r)
         })
       }
