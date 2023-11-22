@@ -30,7 +30,7 @@ export function Home({client, opclient}) {
   const { chain } = useNetwork()
   const { chain:chain2 } = getNetwork()
   console.log({chain, chain2})
-  const [chainName, setChainName] = useState();
+  const [chainId, setChainId] = useState();
   const [label, setLabel] = useState("");
   const { data:baseQueryData = [] } = useQuery(GET_APPROVALS, {
     client
@@ -45,11 +45,12 @@ export function Home({client, opclient}) {
     return {...a, ...{chain:'base', chainId:BASE_CHAIN_ID, operator:ethers.getAddress(a.operator)}}
   })
   const approvals = [...baseapprovals,...opapprovals]
+  const chainParam = CHAIN_INFO[chainId]
+  const chainName = chainParam?.alias
   const parent = `.${chainName || ''}.evmgateway.eth`
-  const chainParam = CHAIN_INFO[chainName]
   const isInL2 = isL2(chain?.id)
   const canRegister = isInL2 && chainParam?.id === chain?.id
-  console.log({label, canRegister,preferred:chainParam?.id, connected:chain?.id, isInL2})
+  console.log({chainParam})
 
   const { address, isConnected } = useAccount()
   console.log('*Profile', chain)
@@ -67,10 +68,10 @@ export function Home({client, opclient}) {
             <h3 style={{color:"rgb(155, 155, 166)",marginLeft:"10px"}} >Choose the chain</h3>
             <div style={{display:"flex", margin:"5px"} }>
             <RadioButton label="Op" name="RadioButtonGroup" value="op"  width="26"
-              onClick={(evt) =>  setChainName('op')}
+              onClick={(evt) =>  setChainId(OP_CHAIN_ID)}
             />
             <RadioButton label="Base" name="RadioButtonGroup" value="base"   width="26"
-              onClick={(evt) =>  setChainName('base')}
+              onClick={(evt) =>  setChainId(BASE_CHAIN_ID)}
             />
             {chainName && (
               <SwitchNetwork chainId={chainParam.id} />

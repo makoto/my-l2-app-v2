@@ -4,7 +4,7 @@ import { Button,Input, Spinner } from '@ensdomains/thorin'
 import { getNetwork } from '@wagmi/core'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useContractWrite, useContractRead } from 'wagmi'
-import {encodeName } from './utils'
+import { CHAIN_INFO, encodeName } from './utils'
 
 const abi = [
   // "function approve(bytes,address,bool)"
@@ -54,22 +54,13 @@ const factoryabi = [
     "type": "function"
   }
 ]
-// const OWNER_ADDRESS = '0xDBBC2C0fe2a1D0fB4056B35a22e543bEb715E7FC'
-// const l2resolverAddress = await DelegatableResolverFactory.predictAddress(OWNER_ADDRESS)
 
-// const DELEGATABLE_RESOLVER_FACTORY_ADDRESSES = {
-//   84531:'0x7d56Bc48F0802319CB7C79B421Fa5661De905AF7',
-//   420:'0xacB9771923873614d77C914D716d8E25dAF09b8d',
-// }
-const l2ExplorerUrl = "https://goerli.basescan.org"
 export function Register({canRegister, parent, label, setLabel}) {
   const { open } = useWeb3Modal()
   const { chain } = useNetwork()
   const { address, isConnected } = useAccount()
-  // const DELEGATABLE_RESOLVER_FACTORY_ADDRESS = DELEGATABLE_RESOLVER_FACTORY_ADDRESSES[chain.id]
-  // const DELEGATABLE_RESOLVER_FACTORY_ADDRESS = '0x7d56Bc48F0802319CB7C79B421Fa5661De905AF7'
-  const L2_RESOLVER_ADDRESS = '0xE4B18eFbF71d516046514598FD7FcFbad4beC742'
-  console.log('*Profile', chain)
+  const { L2_RESOLVER_ADDRESS, blockExplorerUrls } = CHAIN_INFO[chain?.id]
+  const l2ExplorerUrl = blockExplorerUrls[0]
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   })

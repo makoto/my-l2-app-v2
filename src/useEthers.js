@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import { CHAIN_INFO,} from './utils'
 
-
-// Base L1 address
-const L1_RESOLVER_ADDRESS = '0x052D7E10D55Ae12b4F62cdE18dBb7E938efa230D'
 const abi = [
   "function addr(bytes32) view returns (address)",
   "function resolve(bytes,bytes) view returns (bytes)"
 ]
 // Cannot use wagmi while  l2 gateway is hosted locally 
 // Because wagmi uses UniversalResolver that tries to hit gateway from CloudFlare and CF cannot reach localhost
-export default function useEthers(provider, encodedname, node, chainId) {
+export default function useEthers(provider, encodedname, node, l2chainId) {
+  const { L1_RESOLVER_ADDRESS } = CHAIN_INFO[l2chainId]
   const i = new ethers.Interface(abi)
   const calldata = i.encodeFunctionData("addr", [node])
   const [data, setData] = useState('');

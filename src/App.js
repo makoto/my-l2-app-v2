@@ -32,7 +32,7 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 }
 
-const { chains, publicClient, webSocketPublicClient} = configureChains([goerli,baseGoerli], [publicProvider()])
+const { chains, publicClient, webSocketPublicClient} = configureChains([goerli,baseGoerli, optimismGoerli], [publicProvider()])
 // const { chains, publicClient, webSocketPublicClient} = configureChains([mainnet, goerli, optimismGoerli, baseGoerli], [publicProvider()])
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
 createWeb3Modal({ wagmiConfig, projectId, chains })
