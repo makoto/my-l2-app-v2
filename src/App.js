@@ -18,7 +18,10 @@ import { Home } from './Home'
 import { getNetwork } from '@wagmi/core'
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
 import { HashRouter as Router, Route, Routes, Link } from 'react-router-dom';
-
+import { ethers } from 'ethers';
+const L1_PROVIDER_URL = process.env.REACT_APP_L1_PROVIDER_URL
+const provider  = new ethers.JsonRpcProvider(L1_PROVIDER_URL);
+window.provider = provider
 // 1. Get projectId
 const projectId = process.env.REACT_APP_WC_ID
 // 2. Create wagmiConfig
@@ -63,7 +66,7 @@ const App = () => {
       </div>
       <Routes>
         <Route path="/" element={<Home client={client} opclient={opclient} />} />
-        <Route path="/name/:name/:operator/:chainId" element={<Name />} />
+        <Route path="/name/:name/:operator/:chainId" element={<Name provider={provider} />} />
       </Routes>
     </ThemeProvider>
     </ApolloProvider>

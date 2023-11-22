@@ -7,7 +7,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useBlockNumber, useContractWrite, useContractRead, useSwitchNetwork, useEnsAddress } from 'wagmi'
 import { encodeName  } from './utils'
 import {ethers} from 'ethers'
-import useEthers2 from './useEthers2';
+import useEthers from './useEthers';
 
 const l2ExplorerUrl = "https://goerli.basescan.org"
 // import { useWeb3Modal } from '@web3modal/wagmi/react'
@@ -54,7 +54,7 @@ const l2ReverseAbi = [
   }
 ]
 
-export function Name() {
+export function Name(provider) {
   const { name, operator, chainId } = useParams()
   
   // const { open } = useWeb3Modal()
@@ -111,7 +111,7 @@ export function Name() {
   console.log('*Name5', {operator, address, chainId, chainId2:chain.id, canEdit})
   console.log(`*Name BlockNumber l1:${l1blockNumber.data}  l2:${blockNumber.data} ${canEdit}`)
 
-  const l1address = (useEthers2(encodedName, node, chain.id))[0]
+  const l1address = (useEthers(provider, encodedName, node, chain.id))[0]
   const { data:ensAddressData, isError:ensAddressIsError} = useEnsAddress({
     name,
     chainId:5
