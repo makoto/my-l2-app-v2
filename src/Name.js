@@ -32,6 +32,28 @@ const l2WriteAbi = [
     "type":"function"
 }]
 
+const l2ReverseAbi = [
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "setName",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
+
 export function Name() {
   const { name, operator, chainId } = useParams()
   
@@ -47,6 +69,7 @@ export function Name() {
   // Hardcoded base addresses
   const L1_RESOLVER_ADDRESS = '0x052D7E10D55Ae12b4F62cdE18dBb7E938efa230D'
   const L2_RESOLVER_ADDRESS = '0xE4B18eFbF71d516046514598FD7FcFbad4beC742'
+  const L2_REVERSE_REGISTRAR_ADDRESS = '0xDC317ef697b3A9903a24abcC325d9C1C80B19D87'
   console.log('*Name2', {chain, address, isConnected})
   // const args = [ encodedName, 0, operator ]
   const args = [
@@ -83,8 +106,9 @@ export function Name() {
   const l1blockNumber = useBlockNumber({
     chainId: 5,
   })
-  const canEdit = operator === address
-  console.log('*Name5', {operator, address, canEdit})
+  const canEdit = operator === address && parseInt(chainId) === chain.id
+  const cansetName = canEdit && address === addrData
+  console.log('*Name5', {operator, address, chainId, chainId2:chain.id, canEdit})
   console.log(`*Name BlockNumber l1:${l1blockNumber.data}  l2:${blockNumber.data} ${canEdit}`)
 
   const l1address = (useEthers2(encodedName, node, chain.id))[0]
@@ -97,6 +121,13 @@ export function Name() {
     address: L2_RESOLVER_ADDRESS,
     abi: l2WriteAbi,
     functionName:'setAddr',
+    chainId: 84531
+  })
+
+  const { data:setNameData, isLoading:setNameIsLoading, isSuccess:setNameIsSuccess, write:writeSetName } = useContractWrite({
+    address: L2_REVERSE_REGISTRAR_ADDRESS,
+    abi: l2ReverseAbi,
+    functionName:'setName',
     chainId: 84531
   })
 
@@ -132,6 +163,20 @@ export function Name() {
             <a style={{color:"blue", marginTop:"40px", marginLeft:"5px"}}
               target="_blank" href={`${l2ExplorerUrl}/tx/${setAddrData.hash}`}>
               {setAddrData.hash}
+            </a>
+          </div>) : '' }
+          <Button
+            width="45" style={{marginTop:"28px",marginLeft:"15px"}}
+            disabled={!cansetName}
+            onClick={(evt) => {
+              console.log('***clicked', {name, address})
+              writeSetName({args:[name], from:address})
+            }}
+        >{setNameIsLoading ? (<Spinner></Spinner>): (<div>Set Primary Name</div>)}</Button>
+          {setNameData? (<div>
+            <a style={{color:"blue", marginTop:"40px", marginLeft:"5px"}}
+              target="_blank" href={`${l2ExplorerUrl}/tx/${setNameData.hash}`}>
+              {setNameData.hash}
             </a>
           </div>) : '' }
         </div>

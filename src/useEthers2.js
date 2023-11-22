@@ -13,15 +13,18 @@ export default function useEthers2(encodedname, node, chainId) {
   const i = new ethers.Interface(abi)
   const calldata = i.encodeFunctionData("addr", [node])
   const [data, setData] = useState('');
+  console.log('UseEthers1')
   useEffect(() => {
-    if (encodedname && window.ethereum !== null && chainId === 5) {
+    if (encodedname && window.ethereum?.chainId === '0x5' && chainId === 5) {
         const provider = new ethers.BrowserProvider(window.ethereum)
         const resolver = new ethers.Contract(L1_RESOLVER_ADDRESS, abi, provider);
         resolver.resolve(encodedname, calldata, { enableCcipRead: true }).then(r => {
             const decoded = i.decodeFunctionResult("addr", r)
             setData(decoded)
         })
-      }    
+      }else{
+        console.log("***NOT CONNECTED TO GOERLI")
+      }
   }, [encodedname]);
   return data
 }
