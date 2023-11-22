@@ -61,7 +61,7 @@ const App = () => {
     <ThemeProvider theme={lightTheme}>
       <ThorinGlobalStyles />
       <div>
-        <Link to="/">Home</Link>
+        <Link to="/">Home(v0.0.2)</Link>
         <Profile provider={provider} />
       </div>
       <Routes>
