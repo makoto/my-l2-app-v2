@@ -96,7 +96,7 @@ export function Home({client, opclient}) {
             {approval.chain === 'op' ? (
               <Tag  style={{ display: 'inline', marginRight:"1em"   }} colorStyle="redPrimary">OP</Tag>
             ):(
-              <Tag  style={{ display: 'inline', marginRight:"1em"   }} colorStyle="bluePrimary">Blue</Tag>
+              <Tag  style={{ display: 'inline', marginRight:"1em"   }} colorStyle="bluePrimary">Base</Tag>
             )}
             <Link to={`/name/${approval.name}/${approval.operator}/${approval.chainId}`}>{approval.name} is granted to {approval.operator.slice(0,5)}... at {moment(approvedAt).format("YYYY-MM-DD hh:mm")}</Link>
           </li>)
