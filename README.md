@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+# ENS L2 demo app (v2)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the rewrite of [v1](https://github.com/makoto/my-l2-app) but using [EVM Gateway](https://github.com/ensdomains/evmgateway) instead of dm3's [Bedrock Resolver](https://github.com/corpus-io/ENS-Bedrock-Resolver).
 
-## Available Scripts
+The demo allows anyone to either register subnames under `op.evmgateway.eth` on Optimism Goerli chain or subnames under `base.evmgateway.eth` on $BASE chain.
 
-In the project directory, you can run:
+## Setting up the server
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+gh repo clone makoto/my-l2-app-v2
+cd my-l2-app-v2
+yarn
+yarn start
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Video Walkthrough
 
-### `npm test`
+- https://www.loom.com/share/95e306023be74b0585f919e27db28a1a
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## Setting up the subname registrar for your own name
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Set resolver of your name to one of these resolvers on Goerli
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- OP L1Resolver = [0x65a0963A2941A13a96FcDCfE36c94c6a341f26E5](https://goerli.etherscan.io/address/0x65a0963A2941A13a96FcDCfE36c94c6a341f26E5) 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Base L1Resolver = [0x052D7E10D55Ae12b4F62cdE18dBb7E938efa230D](https://goerli.etherscan.io/address/0x052D7E10D55Ae12b4F62cdE18dBb7E938efa230D)
 
-### `npm run eject`
+### Find out the corresponding l2 resovler address via DelegatableResolverFactory
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+On L2, each parent name will own its own resolver and you issue subnames under your resolver.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Optimism DelegatableResolverFactory = [0xacB9771923873614d77C914D716d8E25dAF09b8d](https://goerli-optimism.etherscan.io/address/0xacB9771923873614d77C914D716d8E25dAF09b8d)
+- Base L2 DelegatableResolverFactory = [0x7d56Bc48F0802319CB7C79B421Fa5661De905AF7](https://goerli.basescan.org/address/0x7d56Bc48F0802319CB7C79B421Fa5661De905AF7)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+const l2resolverAddress = await DelegatableResolverFactory.predictAddress(OWNER_ADDRESS)
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Set the l2 resolver address as a traget
 
-## Learn More
+```
+YOURNAME = 'somenewname.eth'
+node = ethers.namehash(`(base|op).{YOURNAME}`)
+await L1Resolver.setTarget(node, l2resolverAddress)
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Deploy l2 subname registrar
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Deploy [DelegatableResolverRegistrar.sol](https://gist.github.com/makoto/7d83ca6530adc69fea27923ee8ae8986) to L2 with resolver address as `target` which you obtained at step 1.
+Take notes of the deployed registrar address 
 
-### Code Splitting
+### Grant the subname registrar as the root
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+const DelegatableResolver = new ethers.Contract(l2resolverAddress, abi, l2provider);
+await DelegatableResolver.approve(encodedname, DELEGATABLE_RESOLVER_REGISRTRAR_ADDRESS, true)
+```
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Replace `evmgateway.eth` on this repo's code to your ENS name 
