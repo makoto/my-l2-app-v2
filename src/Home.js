@@ -10,7 +10,7 @@ import { useAccount, useNetwork, useConnect, useDisconnect, useContractRead } fr
 import { getNetwork } from '@wagmi/core'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { gql, useQuery } from '@apollo/client';
-import { CHAIN_INFO,isL2, OP_CHAIN_ID, BASE_CHAIN_ID } from './utils'
+import { CHAIN_INFO,isL2, OP_CHAIN_ID, BASE_CHAIN_ID, ARB_CHAIN_ID } from './utils'
 import {ethers} from 'ethers'
 
 const GET_APPROVALS = gql`
@@ -25,7 +25,7 @@ const GET_APPROVALS = gql`
 `;
 
 // export function Home({chainName, setChainName, chainParam, canRegister, label, setLabel, approvals}) {
-export function Home({client, opclient}) {
+export function Home({client, opclient, arbclient}) {
   
   const { chain } = useNetwork()
   const { chain:chain2 } = getNetwork()
@@ -38,13 +38,20 @@ export function Home({client, opclient}) {
   const { data:opQueryData = []} = useQuery(GET_APPROVALS, {
     client: opclient
   });
+  const { data:arbQueryData = []} = useQuery(GET_APPROVALS, {
+    client: arbclient
+  });
+  console.log({arbQueryData})
   const opapprovals = (opQueryData?.approvals || []).map(a => {
     return {...a, ...{chain:'op', chainId:OP_CHAIN_ID, operator:ethers.getAddress(a.operator)}}
   })
   const baseapprovals = (baseQueryData?.approvals || []).map(a => {
     return {...a, ...{chain:'base', chainId:BASE_CHAIN_ID, operator:ethers.getAddress(a.operator)}}
   })
-  const approvals = [...baseapprovals,...opapprovals]
+  const arbapprovals = (arbQueryData?.approvals || []).map(a => {
+    return {...a, ...{chain:'arb', chainId:ARB_CHAIN_ID, operator:ethers.getAddress(a.operator)}}
+  })
+  const approvals = [...baseapprovals,...opapprovals,...arbapprovals]
   const chainParam = CHAIN_INFO[chainId]
   const chainName = chainParam?.alias
   const parent = `.${chainName || ''}.evmgateway.eth`
@@ -73,6 +80,9 @@ export function Home({client, opclient}) {
             <RadioButton label="Base" name="RadioButtonGroup" value="base"   width="26"
               onClick={(evt) =>  setChainId(BASE_CHAIN_ID)}
             />
+            <RadioButton label="Arb" name="RadioButtonGroup" value="arb"   width="26"
+              onClick={(evt) =>  setChainId(ARB_CHAIN_ID)}
+            />
             {chainName && (
               <SwitchNetwork chainId={chainParam.id} />
             )}
@@ -93,12 +103,16 @@ export function Home({client, opclient}) {
           console.log('****' ,{approval})
           const approvedAt = new Date(blockTimestamp * 1000)
           return (<li style={{margin:"5px"}}>
-            {approval.chain === 'op' ? (
+            {approval.chain === 'op' && (
               <Tag  style={{ display: 'inline', marginRight:"1em"   }} colorStyle="redPrimary">OP</Tag>
-            ):(
+            )}
+            {approval.chain === 'base' && (
               <Tag  style={{ display: 'inline', marginRight:"1em"   }} colorStyle="bluePrimary">Base</Tag>
             )}
-            <Link to={`/name/${approval.name}/${approval.operator}/${approval.chainId}`}>{approval.name} is granted to {approval.operator.slice(0,5)}... at {moment(approvedAt).format("YYYY-MM-DD hh:mm")}</Link>
+            {approval.chain === 'arb' && (
+              <Tag  style={{ display: 'inline', marginRight:"1em"   }} colorStyle="indigoPrimary">Arb</Tag>
+            )}
+                        <Link to={`/name/${approval.name}/${approval.operator}/${approval.chainId}`}>{approval.name} is granted to {approval.operator.slice(0,5)}... at {moment(approvedAt).format("YYYY-MM-DD hh:mm")}</Link>
           </li>)
         })
       }

@@ -69,8 +69,6 @@ export function Register({canRegister, parent, label, setLabel}) {
   //   functionName: 'predictAddress',
   //   chainId: chain.id
   // })
-  // console.log('***REGISTER1', {chainId:chain.id, OWNER_ADDRESS})
-  // console.log('***REGISTER2', {data, error, isError, isLoading, DELEGATABLE_RESOLVER_FACTORY_ADDRESS})
   const { data:approveData, isLoading:approveIsLoading, isSuccess:approveIsSuccess, write:writeApprove } = useContractWrite({
     address: L2_REGISTRAR_ADDRESS,
     abi: abi,

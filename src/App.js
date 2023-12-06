@@ -11,7 +11,7 @@ import { RadioButton,CheckboxRow,Card,FieldSet } from '@ensdomains/thorin'
 import { WagmiConfig, createConfig,configureChains, mainnet } from 'wagmi'
 import { createPublicClient, http } from 'viem'
 import { publicProvider} from 'wagmi/providers/public'
-import { goerli, optimismGoerli, baseGoerli } from 'wagmi/chains'
+import { goerli, optimismGoerli, baseGoerli, arbitrumGoerli } from 'wagmi/chains'
 import { Profile } from './Profile'
 import { Name } from './Name'
 import { Home } from './Home'
@@ -32,7 +32,7 @@ const metadata = {
 }
 console.log({L1_PROVIDER_URL,projectId})
 
-const { chains, publicClient, webSocketPublicClient} = configureChains([goerli,baseGoerli, optimismGoerli], [publicProvider()])
+const { chains, publicClient, webSocketPublicClient} = configureChains([goerli,baseGoerli,optimismGoerli,arbitrumGoerli], [publicProvider()])
 // const { chains, publicClient, webSocketPublicClient} = configureChains([mainnet, goerli, optimismGoerli, baseGoerli], [publicProvider()])
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
 createWeb3Modal({ wagmiConfig, projectId, chains })
@@ -44,7 +44,7 @@ const config = createConfig({
 
 const baseuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-baseg/version/latest'
 const opuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-opg/version/latest'
-
+const arburi = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-arbg/version/latest'
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   uri: baseuri
@@ -53,6 +53,11 @@ const opclient = new ApolloClient({
   cache: new InMemoryCache(),
   uri: opuri
 });
+const arbclient = new ApolloClient({
+  cache: new InMemoryCache(),
+  uri: arburi
+});
+
 const App = () => {
   return (
     <Router>
@@ -65,7 +70,7 @@ const App = () => {
         <Profile provider={provider} />
       </div>
       <Routes>
-        <Route path="/" element={<Home client={client} opclient={opclient} />} />
+        <Route path="/" element={<Home client={client} opclient={opclient} arbclient={arbclient} />} />
         <Route path="/name/:name/:operator/:chainId" element={<Name provider={provider} />} />
       </Routes>
     </ThemeProvider>
