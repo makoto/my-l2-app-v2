@@ -4,7 +4,7 @@ import { Button, LockSVG } from '@ensdomains/thorin'
 import { getNetwork } from '@wagmi/core'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import useL2PrimaryName from './useL2PrimaryName';
-
+import { Link } from 'react-router-dom';
 export function Profile(provider) {
   const { open } = useWeb3Modal()
   const { chain } = useNetwork()
@@ -20,7 +20,7 @@ export function Profile(provider) {
   if (isConnected){
     return (
       <div>
-        Connected to {chain.name} as {displayName}
+        Connected to {chain.name} as <Link to={`/address/${address}`}>{displayName}</Link>
         <Button  style={{ width: '180px' }} onClick={() => disconnect()}>Disconnect</Button>
       </div>)
   }else{

@@ -14,6 +14,7 @@ import { publicProvider} from 'wagmi/providers/public'
 import { sepolia, optimismSepolia, baseSepolia, arbitrumSepolia } from 'wagmi/chains'
 import { Profile } from './Profile'
 import { Name } from './Name'
+import { Address } from './Address'
 import { Home } from './Home'
 import { getNetwork } from '@wagmi/core'
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
@@ -72,6 +73,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home client={client} opclient={opclient} arbclient={arbclient} />} />
         <Route path="/name/:name/:operator/:chainId" element={<Name provider={provider} />} />
+        <Route path="/address/:address" element={<Address provider={provider} />} />
       </Routes>
     </ThemeProvider>
     </ApolloProvider>

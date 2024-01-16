@@ -11,13 +11,15 @@ export default function useL2PrimaryName(provider, address, chain) {
   const [data, setData] = useState('');
   useEffect(() => {
     if (address && isL2(chain?.id)) {
-        const {alias, L1_REVERSE_RESOLVER_ADDRESS}         = CHAIN_INFO[chain?.id]
-        const namespace       = `${alias}.reverse.evmgateway.eth`;
+        const {coinType, L1_REVERSE_RESOLVER_ADDRESS}         = CHAIN_INFO[chain?.id]
+        const namespace       = `${coinType}.reverse.evmgateway.eth`;
         const name            = address.substring(2).toLowerCase() + "." + namespace
-        const reversenode     = ethers.namehash(name)    
+        const reversenode     = ethers.namehash(name)
         const resolver = new ethers.Contract(L1_REVERSE_RESOLVER_ADDRESS, abi, provider);
         resolver.name(reversenode, { enableCcipRead: true }).then(r => {
           setData(r)
+        }).catch((e) =>{
+          console.log('useL2PrimaryName error', e)
         })
       }
   }, [address, chain?.id]);

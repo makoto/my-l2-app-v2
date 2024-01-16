@@ -23,16 +23,18 @@ yarn start
 
 ### Set resolver of your name to one of these resolvers on Goerli
 
-- OP L1Resolver = [0x65a0963A2941A13a96FcDCfE36c94c6a341f26E5](https://goerli.etherscan.io/address/0x65a0963A2941A13a96FcDCfE36c94c6a341f26E5) 
-
-- Base L1Resolver = [0x052D7E10D55Ae12b4F62cdE18dBb7E938efa230D](https://goerli.etherscan.io/address/0x052D7E10D55Ae12b4F62cdE18dBb7E938efa230D)
+- OP L1Resolver = [0xE0356133C3c43cbb623543488E607E4e349eAA10](https://sepolia.etherscan.io/address/0xE0356133C3c43cbb623543488E607E4e349eAA10#code)
+- Base L1Resolver = [0xE00739Fc93e27aBf44343fD5FAA151c67C0A0Aa3](https://sepolia.etherscan.io/address/0xE00739Fc93e27aBf44343fD5FAA151c67C0A0Aa3#code)
+- Arb L1Resolver = [0x9F3C37A6cDd5ECA7b27140856753EDBF387c06bB](https://sepolia.etherscan.io/address/0x9F3C37A6cDd5ECA7b27140856753EDBF387c06bB#code)
 
 ### Find out the corresponding l2 resovler address via DelegatableResolverFactory
 
 On L2, each parent name will own its own resolver and you issue subnames under your resolver.
 
-- Optimism DelegatableResolverFactory = [0xacB9771923873614d77C914D716d8E25dAF09b8d](https://goerli-optimism.etherscan.io/address/0xacB9771923873614d77C914D716d8E25dAF09b8d)
-- Base L2 DelegatableResolverFactory = [0x7d56Bc48F0802319CB7C79B421Fa5661De905AF7](https://goerli.basescan.org/address/0x7d56Bc48F0802319CB7C79B421Fa5661De905AF7)
+- Optimism DelegatableResolverFactory = [0x4166B7e70F14C48980Da362256D1Da9Cc8F95e13](https://sepolia-optimism.etherscan.io/address/0x4166B7e70F14C48980Da362256D1Da9Cc8F95e13#code)
+- Base L2 DelegatableResolverFactory = [0x0e8DA38565915B7e74e2d78F80ba1BF815F34116](https://sepolia.basescan.org/address/0x0e8DA38565915B7e74e2d78F80ba1BF815F34116#code)
+- Arbitrum L2 DelegatableResolverFactory = [0x94fbCE7ca1a0152cfC99F90f4421d31cf356c896](https://api-sepolia.arbiscan.io/address/0x94fbCE7ca1a0152cfC99F90f4421d31cf356c896#code)
+
 
 ```
 const l2resolverAddress = await DelegatableResolverFactory.predictAddress(OWNER_ADDRESS)
