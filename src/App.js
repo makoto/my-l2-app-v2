@@ -11,7 +11,7 @@ import { RadioButton,CheckboxRow,Card,FieldSet } from '@ensdomains/thorin'
 import { WagmiConfig, createConfig,configureChains, mainnet } from 'wagmi'
 import { createPublicClient, http } from 'viem'
 import { publicProvider} from 'wagmi/providers/public'
-import { goerli, optimismGoerli, baseGoerli, arbitrumGoerli } from 'wagmi/chains'
+import { sepolia, optimismSepolia, baseSepolia, arbitrumSepolia } from 'wagmi/chains'
 import { Profile } from './Profile'
 import { Name } from './Name'
 import { Home } from './Home'
@@ -32,8 +32,7 @@ const metadata = {
 }
 console.log({L1_PROVIDER_URL,projectId})
 
-const { chains, publicClient, webSocketPublicClient} = configureChains([goerli,baseGoerli,optimismGoerli,arbitrumGoerli], [publicProvider()])
-// const { chains, publicClient, webSocketPublicClient} = configureChains([mainnet, goerli, optimismGoerli, baseGoerli], [publicProvider()])
+const { chains, publicClient, webSocketPublicClient} = configureChains([sepolia, optimismSepolia, baseSepolia, arbitrumSepolia], [publicProvider()])
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
 createWeb3Modal({ wagmiConfig, projectId, chains })
 
@@ -42,9 +41,10 @@ const config = createConfig({
   publicClient
 })
 
-const baseuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-baseg/version/latest'
-const opuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-opg/version/latest'
-const arburi = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-arbg/version/latest'
+const baseuri = 'http://localhost:8080'
+const opuri = 'https://api.studio.thegraph.com/query/1397/ens-op-sepolia/version/latest'
+const arburi = 'https://api.studio.thegraph.com/query/1397/ens-arb-sepolia/version/latest'
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   uri: baseuri

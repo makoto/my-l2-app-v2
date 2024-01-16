@@ -21,7 +21,7 @@ export default function useEthers(provider, encodedname, node, l2chainId) {
             setData(decoded)
         })
       }else{
-        console.log("***NOT CONNECTED TO GOERLI")
+        console.log("***NOT CONNECTED")
       }
   }, [encodedname]);
   return data
