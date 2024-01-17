@@ -6,11 +6,11 @@ The demo allows anyone to either register subnames under `op.evmgateway.eth` on 
 
 ## Setting up the server
 
-
 ```
 gh repo clone makoto/my-l2-app-v2
 cd my-l2-app-v2
 yarn
+cp .env.example .env // Update the constants
 yarn start
 ```
 

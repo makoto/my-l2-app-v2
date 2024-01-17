@@ -5,7 +5,7 @@ import { Button, Input, Spinner } from '@ensdomains/thorin'
 import { getNetwork } from '@wagmi/core'
 import { useParams, Link } from 'react-router-dom';
 import { useBlockNumber, useContractWrite, useContractRead, useSwitchNetwork, useEnsAddress } from 'wagmi'
-import { CHAIN_INFO, encodeName } from './utils'
+import { CHAIN_INFO, L1_CHAIN_ID, encodeName } from './utils'
 import {ethers} from 'ethers'
 import useEthers from './useEthers';
 
@@ -88,7 +88,7 @@ export function Name(provider) {
     chainId: chainId
   })
   const l1blockNumber = useBlockNumber({
-    chainId: 5,
+    chainId: L1_CHAIN_ID,
   })
   const canEdit = operator === address && chainId === chain?.id
   const cansetName = canEdit && address === addrData
