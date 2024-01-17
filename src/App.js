@@ -42,7 +42,7 @@ const config = createConfig({
   publicClient
 })
 
-const baseuri = 'http://localhost:8080'
+const baseuri = 'https://api.studio.thegraph.com/query/1397/ens-base-sepolia/version/latest'
 const opuri = 'https://api.studio.thegraph.com/query/1397/ens-op-sepolia/version/latest'
 const arburi = 'https://api.studio.thegraph.com/query/1397/ens-arb-sepolia/version/latest'
 
