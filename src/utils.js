@@ -3,6 +3,7 @@ export const L1_CHAIN_ID = 11155111
 export const ARB_CHAIN_ID = 421614
 export const OP_CHAIN_ID = 11155420
 export const BASE_CHAIN_ID = 84532
+export const L2_CHAIN_IDS = [ARB_CHAIN_ID,BASE_CHAIN_ID,OP_CHAIN_ID]
 export const CHAIN_INFO={
     [ARB_CHAIN_ID]:{
       id:ARB_CHAIN_ID,
