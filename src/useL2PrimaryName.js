@@ -12,7 +12,7 @@ export default function useL2PrimaryName(provider, address, chain) {
   useEffect(() => {
     if (address && isL2(chain?.id)) {
         const {coinType, L1_REVERSE_RESOLVER_ADDRESS}         = CHAIN_INFO[chain?.id]
-        const namespace       = `${coinType}.reverse.evmgateway.eth`;
+        const namespace       = `${coinType}.reverse`;
         const name            = address.substring(2).toLowerCase() + "." + namespace
         const reversenode     = ethers.namehash(name)
         const resolver = new ethers.Contract(L1_REVERSE_RESOLVER_ADDRESS, abi, provider);
