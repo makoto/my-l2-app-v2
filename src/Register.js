@@ -6,26 +6,29 @@ import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useContractWrite, useContractRead } from 'wagmi'
 import { CHAIN_INFO, encodeName } from './utils'
 
-const abi = [
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "name",
-        "type": "bytes"
-      },
-      {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      }
-    ],
-    "name": "register",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-]
+// const abi = [
+//   {
+//     "inputs": [
+//       {
+//         "internalType": "bytes",
+//         "name": "name",
+//         "type": "bytes"
+//       },
+//       {
+//         "internalType": "address",
+//         "name": "operator",
+//         "type": "address"
+//       }
+//     ],
+//     "name": "register",
+//     "outputs": [],
+//     "stateMutability": "nonpayable",
+//     "type": "function"
+//   }
+// ]
+
+  
+const abi = [{"inputs":[{"internalType":"contract DelegatableResolver","name":"_resolver","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"bytes","name":"name","type":"bytes"},{"internalType":"address","name":"operator","type":"address"}],"name":"register","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"resolver","outputs":[{"internalType":"contract DelegatableResolver","name":"","type":"address"}],"stateMutability":"view","type":"function"}]
 const factoryabi = [
   // "function predictAddress(address) views returns (address clone)"
   {
@@ -58,7 +61,7 @@ export function Register({canRegister, parent, label, setLabel}) {
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   })
-  console.log({chain, address, isConnected})
+  console.log({chain, address, isConnected, L2_REGISTRAR_ADDRESS})
   const { disconnect } = useDisconnect()
   
   // const { data, error, isError, isLoading } = useContractRead({

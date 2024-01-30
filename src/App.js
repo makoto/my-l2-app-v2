@@ -11,9 +11,10 @@ import { RadioButton,CheckboxRow,Card,FieldSet } from '@ensdomains/thorin'
 import { WagmiConfig, createConfig,configureChains, mainnet } from 'wagmi'
 import { createPublicClient, http } from 'viem'
 import { publicProvider} from 'wagmi/providers/public'
-import { goerli, optimismGoerli, baseGoerli, arbitrumGoerli } from 'wagmi/chains'
+import { sepolia, optimismSepolia, baseSepolia, arbitrumSepolia } from 'wagmi/chains'
 import { Profile } from './Profile'
 import { Name } from './Name'
+import { Address } from './Address'
 import { Home } from './Home'
 import { getNetwork } from '@wagmi/core'
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
@@ -32,8 +33,7 @@ const metadata = {
 }
 console.log({L1_PROVIDER_URL,projectId})
 
-const { chains, publicClient, webSocketPublicClient} = configureChains([goerli,baseGoerli,optimismGoerli,arbitrumGoerli], [publicProvider()])
-// const { chains, publicClient, webSocketPublicClient} = configureChains([mainnet, goerli, optimismGoerli, baseGoerli], [publicProvider()])
+const { chains, publicClient, webSocketPublicClient} = configureChains([sepolia, optimismSepolia, baseSepolia, arbitrumSepolia], [publicProvider()])
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
 createWeb3Modal({ wagmiConfig, projectId, chains })
 
@@ -42,9 +42,10 @@ const config = createConfig({
   publicClient
 })
 
-const baseuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-baseg/version/latest'
-const opuri = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-opg/version/latest'
-const arburi = 'https://api.studio.thegraph.com/query/1397/ens-delegatable-resolver-arbg/version/latest'
+const baseuri = 'https://api.studio.thegraph.com/query/1397/ens-base-sepolia/version/latest'
+const opuri = 'https://api.studio.thegraph.com/query/1397/ens-op-sepolia/version/latest'
+const arburi = 'https://api.studio.thegraph.com/query/1397/ens-arb-sepolia/version/latest'
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   uri: baseuri
@@ -72,6 +73,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home client={client} opclient={opclient} arbclient={arbclient} />} />
         <Route path="/name/:name/:operator/:chainId" element={<Name provider={provider} />} />
+        <Route path="/address/:address" element={<Address provider={provider} />} />
       </Routes>
     </ThemeProvider>
     </ApolloProvider>

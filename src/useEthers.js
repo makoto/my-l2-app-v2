@@ -20,8 +20,11 @@ export default function useEthers(provider, encodedname, node, l2chainId) {
             const decoded = i.decodeFunctionResult("addr", r)
             setData(decoded)
         })
+        .catch((e)=>{
+          console.log("useEthers error", {encodedname,e})
+        })
       }else{
-        console.log("***NOT CONNECTED TO GOERLI")
+        console.log("***NOT CONNECTED")
       }
   }, [encodedname]);
   return data
